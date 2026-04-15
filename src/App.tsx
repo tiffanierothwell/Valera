@@ -156,7 +156,7 @@ function ProgressTimeline() {
       </div>
 
       {/* Track + steps */}
-      <div style={{ overflowX: isMobile ? "auto" : "visible", overflowY: "visible", marginLeft: isMobile ? -16 : 0, marginRight: isMobile ? -16 : 0, paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}>
+      <div style={{ overflowX: isMobile ? "auto" : "visible", overflowY: "visible" }}>
       <div style={{ position: "relative" as const, minWidth: isMobile ? 700 : "auto" }}>
 
         {/* Grey track */}
@@ -387,7 +387,7 @@ function AprilCalendar() {
 export default function App() {
   const isMobile = useIsMobile()
   return (
-    <div style={{ minHeight: "100vh", background: "#F2F2F2", padding: isMobile ? "20px 14px 60px" : "40px 28px 80px", fontFamily: FONT }}>
+    <div style={{ minHeight: "100vh", background: "#F2F2F2", padding: isMobile ? "20px 14px 60px" : "40px 28px 80px", fontFamily: FONT, overflowX: "hidden" }}>
       <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
 
