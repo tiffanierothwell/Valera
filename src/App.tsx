@@ -625,11 +625,11 @@ export default function App() {
                   date:  "Apr 2026",
                   href:  "https://app.fireflies.ai/view/Google-Meet-Andre-Valera-Technical-questions-on-systems-tech-stack::01KP64FZBKSRF5YTWEGYT509F7",
                 },
-              ] as { title: string; sub: string; date: string; href: string }[]).map(({ title, sub, date, href }) => (
-                <a key={href} href={href} target="_blank" rel="noreferrer" style={{
+              ] as { title: string; sub: string; date: string; href: string }[]).map(({ title, sub, date }) => (
+                <div key={title} style={{
                   display: "flex", alignItems: "center", gap: 14,
                   padding: "13px 14px", borderRadius: 12,
-                  background: CHIP, textDecoration: "none",
+                  background: CHIP,
                   border: `1px solid ${RULE}`, marginBottom: 10,
                 }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, background: "#fff", border: `1px solid ${RULE}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔥</div>
@@ -639,9 +639,8 @@ export default function App() {
                   </div>
                   <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
                     <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3 }}>{date}</span>
-                    <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 1, textTransform: "uppercase" as const, color: INK, border: `1px solid ${INK}`, padding: "2px 7px", borderRadius: 99 }}>View ↗</span>
                   </div>
-                </a>
+                </div>
               ))}
               <div style={{ border: `1.5px dashed ${RULE}`, borderRadius: 12, padding: "12px 14px", display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: CHIP, display: "flex", alignItems: "center", justifyContent: "center" }}>
