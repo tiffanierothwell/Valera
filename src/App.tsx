@@ -1,5 +1,15 @@
 import './App.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+function useIsMobile(bp = 640) {
+  const [mobile, setMobile] = useState(() => window.innerWidth < bp)
+  useEffect(() => {
+    const fn = () => setMobile(window.innerWidth < bp)
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
+  }, [bp])
+  return mobile
+}
 
 // ── Design tokens ─────────────────────────────────────────────
 const INK   = "#0A0A0A"
@@ -121,6 +131,7 @@ const MILESTONES: { label: string; sub: string; status: MS }[] = [
 ]
 
 function ProgressTimeline() {
+  const isMobile = useIsMobile()
   const total    = MILESTONES.length
   const doneCount = MILESTONES.filter(m => m.status === "done").length
   const nowIdx   = MILESTONES.findIndex(m => m.status === "now")
@@ -129,7 +140,7 @@ function ProgressTimeline() {
   const fillPct  = nowIdx >= 0 ? halfStep + (nowIdx / (total - 1)) * (100 - 2 * halfStep) : 100
 
   return (
-    <div style={{ ...CARD, padding: "26px 32px 28px" }}>
+    <div style={{ ...CARD, padding: isMobile ? "20px 16px 22px" : "26px 32px 28px" }}>
 
       {/* Header row */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
@@ -145,7 +156,8 @@ function ProgressTimeline() {
       </div>
 
       {/* Track + steps */}
-      <div style={{ position: "relative" as const }}>
+      <div style={{ overflowX: isMobile ? "auto" : "visible", overflowY: "visible", marginLeft: isMobile ? -16 : 0, marginRight: isMobile ? -16 : 0, paddingLeft: isMobile ? 16 : 0, paddingRight: isMobile ? 16 : 0 }}>
+      <div style={{ position: "relative" as const, minWidth: isMobile ? 700 : "auto" }}>
 
         {/* Grey track */}
         <div style={{
@@ -213,6 +225,7 @@ function ProgressTimeline() {
             )
           })}
         </div>
+      </div>
       </div>
 
       {/* Bottom progress bar */}
@@ -372,8 +385,9 @@ function AprilCalendar() {
 
 // ── App ───────────────────────────────────────────────────────
 export default function App() {
+  const isMobile = useIsMobile()
   return (
-    <div style={{ minHeight: "100vh", background: "#F2F2F2", padding: "40px 28px 80px", fontFamily: FONT }}>
+    <div style={{ minHeight: "100vh", background: "#F2F2F2", padding: isMobile ? "20px 14px 60px" : "40px 28px 80px", fontFamily: FONT }}>
       <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
 
@@ -385,7 +399,7 @@ export default function App() {
           {/* Black top accent stripe */}
           <div style={{ height: 4, background: INK, width: "100%" }} />
 
-          <div style={{ padding: "36px 40px 40px", display: "flex", alignItems: "flex-start", gap: 32 }}>
+          <div style={{ padding: isMobile ? "22px 20px 24px" : "36px 40px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "flex-start", gap: isMobile ? 20 : 32 }}>
 
             {/* ── LEFT: main greeting ── */}
             <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 28 }}>
@@ -418,8 +432,8 @@ export default function App() {
                   margin: "0 0 10px",
                 }}>Thanks for all of your help</p>
                 <h1 style={{
-                  fontFamily: FONT, fontWeight: 900, fontSize: 68,
-                  color: INK, letterSpacing: -3, lineHeight: 0.92, margin: 0,
+                  fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 44 : 68,
+                  color: INK, letterSpacing: isMobile ? -1.5 : -3, lineHeight: 0.92, margin: 0,
                 }}>Hi Valera!</h1>
               </div>
 
@@ -434,7 +448,7 @@ export default function App() {
 
             {/* ── RIGHT: dark status card ── */}
             <div style={{
-              width: 240, flexShrink: 0,
+              width: isMobile ? "100%" : 240, flexShrink: isMobile ? undefined : 0,
               background: INK, borderRadius: 16,
               padding: "24px 24px 22px",
               display: "flex", flexDirection: "column" as const, gap: 20,
@@ -486,13 +500,13 @@ export default function App() {
         {/* ════════════════════════════════════════
             2-COL CONTENT GRID
         ════════════════════════════════════════ */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
 
           {/* ── LEFT COL ── */}
           <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
             {/* Project brief + mini calendar side by side */}
-            <div style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
+            <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, alignItems: "stretch" }}>
               <div style={{ ...CARD, padding: "28px 28px", flex: 1 }}>
                 <SectionLabel label="Project in one sentence" />
                 <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 13, color: INK2, lineHeight: 1.8, margin: 0 }}>
@@ -500,7 +514,7 @@ export default function App() {
                   <span style={{ fontWeight: 700, color: INK }}> Fully internal. No customer-facing layer.</span>
                 </p>
               </div>
-              <div style={{ flexShrink: 0, width: 190, display: "flex" }}>
+              <div style={{ flexShrink: 0, width: isMobile ? "auto" : 190, display: "flex" }}>
                 <AprilCalendar />
               </div>
             </div>
@@ -650,7 +664,7 @@ export default function App() {
         {/* ════════════════════════════════════════
             BUILD SEQUENCE — full width
         ════════════════════════════════════════ */}
-        <div style={{ ...CARD, padding: "32px 36px" }}>
+        <div style={{ ...CARD, padding: isMobile ? "22px 18px" : "32px 36px" }}>
           <SectionLabel label="Build sequence — baby steps, in order" />
           <Step n={1} status="now"  title="Supabase CLI + Schema"    who="Valera leads today"
             detail="Install Supabase CLI on Tiffanie's Mac. Authorize to her account. Claude Code generates the full schema and pushes the tables directly via CLI. Valera guides the entire setup." />
