@@ -339,24 +339,6 @@ export default function App() {
               <WavingFigure size={160} />
             </div>
           </div>
-
-          {/* Bottom: stat strip */}
-          <div style={{ borderTop: `1px solid ${RULE}`, display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr" }}>
-            {([
-              { n: "5",  label: "Screens built"  },
-              { n: "0",  label: "DB connected"   },
-              { n: "1",  label: "Today's goal"   },
-              { n: "3",  label: "Store locations" },
-            ] as { n: string; label: string }[]).map(({ n, label }, i) => (
-              <div key={label} style={{
-                padding: "20px 0", textAlign: "center" as const,
-                borderLeft: i > 0 ? `1px solid ${RULE}` : "none",
-              }}>
-                <div style={{ fontFamily: FONT, fontWeight: 900, fontSize: 38, color: INK, letterSpacing: -2, lineHeight: 1 }}>{n}</div>
-                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 10, color: INK3, letterSpacing: 1.2, textTransform: "uppercase" as const, marginTop: 5 }}>{label}</div>
-              </div>
-            ))}
-          </div>
         </div>
 
 
