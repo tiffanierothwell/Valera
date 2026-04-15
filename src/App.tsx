@@ -451,7 +451,7 @@ export default function App() {
               {/* Name */}
               <div>
                 <p style={{ fontFamily: FONT, fontWeight: 200, fontSize: 16, color: INK3, letterSpacing: 1, marginBottom: 6, textTransform: "uppercase" as const }}>
-                  It's good to see you again
+                  Thanks for all of your help
                 </p>
                 <h1 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 62, color: INK, letterSpacing: -2.5, lineHeight: 0.95, margin: 0 }}>
                   Hi<br/>Valera!
@@ -460,7 +460,7 @@ export default function App() {
 
               {/* Sub */}
               <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.7, maxWidth: 340, margin: 0 }}>
-                Here's the complete picture for today's coaching session — <strong style={{ fontWeight: 600, color: INK2 }}>Little Tree POS Help Desk</strong>, MJM Ventures.
+                Ticket Help Desk Project — <strong style={{ fontWeight: 600, color: INK2 }}>Little Tree & Le Roi</strong>
               </p>
             </div>
 
@@ -685,7 +685,7 @@ export default function App() {
 
         {/* Footer */}
         <p style={{ textAlign: "center" as const, fontFamily: FONT, fontWeight: 200, fontSize: 10, color: "#BBBBBB", letterSpacing: 2, textTransform: "uppercase" as const, paddingTop: 4 }}>
-          MJM Ventures · Little Tree POS Help Desk · AAA Accelerator · April 2026
+          Ticket Help Desk Project · Little Tree & Le Roi · AAA Accelerator · April 2026
         </p>
 
       </div>
