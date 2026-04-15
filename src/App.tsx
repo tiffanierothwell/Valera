@@ -64,45 +64,7 @@ function Row({ label, value, pill }: { label: string; value: string; pill?: Reac
   )
 }
 
-// ── Waving figure ─────────────────────────────────────────────
-function WavingFigure({ size = 150 }: { size?: number }) {
-  const sw = 2.8
-  return (
-    <svg viewBox="0 0 130 205" width={size} height={size * 1.37} style={{ display: "block" }}>
-      {/* Head */}
-      <circle cx="65" cy="46" r="25" fill="#E8E8E8" stroke={INK} strokeWidth={sw}/>
-      {/* Glasses */}
-      <rect x="45" y="38" width="17" height="12" rx="6" fill="none" stroke={INK} strokeWidth="2"/>
-      <rect x="65" y="38" width="17" height="12" rx="6" fill="none" stroke={INK} strokeWidth="2"/>
-      <line x1="62" y1="44" x2="65" y2="44" stroke={INK} strokeWidth="2"/>
-      {/* Eyes */}
-      <circle cx="53.5" cy="44" r="3" fill={INK}/>
-      <circle cx="73.5" cy="44" r="3" fill={INK}/>
-      {/* Smile */}
-      <path d="M 54 54 Q 65 63 76 54" fill="none" stroke={INK} strokeWidth={sw} strokeLinecap="round"/>
-      {/* Neck */}
-      <line x1="65" y1="71" x2="65" y2="84" stroke={INK} strokeWidth={sw}/>
-      {/* Body */}
-      <path d="M 37 84 Q 65 79 93 84 L 95 140 Q 65 144 35 140 Z" fill="#E8E8E8" stroke={INK} strokeWidth={sw} strokeLinejoin="round"/>
-      {/* Left arm down */}
-      <path d="M 38 92 Q 22 114 20 134" fill="none" stroke={INK} strokeWidth={sw} strokeLinecap="round"/>
-      <circle cx="19" cy="138" r="7" fill="#E8E8E8" stroke={INK} strokeWidth="2"/>
-      {/* Right arm waving */}
-      <path d="M 92 92 Q 110 68 114 44" fill="none" stroke={INK} strokeWidth={sw} strokeLinecap="round"/>
-      <circle cx="115" cy="38" r="10" fill="#E8E8E8" stroke={INK} strokeWidth="2"/>
-      {/* Fingers */}
-      <line x1="115" y1="28" x2="112" y2="21" stroke={INK} strokeWidth="1.6" strokeLinecap="round"/>
-      <line x1="119" y1="28" x2="119" y2="20" stroke={INK} strokeWidth="1.6" strokeLinecap="round"/>
-      <line x1="123" y1="30" x2="126" y2="23" stroke={INK} strokeWidth="1.6" strokeLinecap="round"/>
-      {/* Legs */}
-      <line x1="51" y1="140" x2="44" y2="182" stroke={INK} strokeWidth={sw} strokeLinecap="round"/>
-      <line x1="79" y1="140" x2="86" y2="182" stroke={INK} strokeWidth={sw} strokeLinecap="round"/>
-      {/* Feet */}
-      <path d="M 44 182 Q 32 185 30 182 Q 32 177 44 178" fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round"/>
-      <path d="M 86 182 Q 98 185 100 182 Q 98 177 86 178" fill="none" stroke={INK} strokeWidth="2" strokeLinecap="round"/>
-    </svg>
-  )
-}
+
 
 // ── Step ──────────────────────────────────────────────────────
 type StepStatus = "now" | "next" | "later"
@@ -416,65 +378,100 @@ export default function App() {
 
 
         {/* ════════════════════════════════════════
-            HERO CARD — greeting + figure + stats
+            HERO CARD
         ════════════════════════════════════════ */}
-        <div style={{ ...CARD }}>
+        <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
 
-          {/* Top: greeting + figure */}
-          <div style={{ display: "flex", alignItems: "stretch", minHeight: 240 }}>
+          {/* Black top accent stripe */}
+          <div style={{ height: 4, background: INK, width: "100%" }} />
 
-            {/* Greeting */}
-            <div style={{ flex: 1, padding: "36px 40px", display: "flex", flexDirection: "column" as const, justifyContent: "space-between" }}>
-              {/* Meta badges */}
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, alignItems: "center" }}>
-                {/* AAA Accelerator logo badge */}
+          <div style={{ padding: "36px 40px 40px", display: "flex", alignItems: "flex-start", gap: 32 }}>
+
+            {/* ── LEFT: main greeting ── */}
+            <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 28 }}>
+
+              {/* Badge row */}
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" as const }}>
                 <span style={{
                   fontFamily: FONT, fontSize: 9, fontWeight: 800,
                   letterSpacing: 1.5, textTransform: "uppercase" as const,
-                  padding: "5px 14px", borderRadius: 99,
-                  background: INK,
+                  padding: "5px 14px", borderRadius: 99, background: INK,
                   display: "inline-flex", alignItems: "center", gap: 4,
                 }}>
-                  <span style={{ color: "#FF1493", letterSpacing: 0, fontWeight: 900, fontSize: 11 }}>///</span>
-                  <span style={{ color: "#ffffff" }}>Accelerator</span>
+                  <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11 }}>///</span>
+                  <span style={{ color: "#fff" }}>Accelerator</span>
                 </span>
-                {["April 15, 2026", "Session 2"].map((badge) => (
-                  <span key={badge} style={{
+                {["April 15, 2026", "Session 2"].map(b => (
+                  <span key={b} style={{
                     fontFamily: FONT, fontSize: 9, fontWeight: 300,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
-                    padding: "4px 12px", borderRadius: 99,
-                    background: CHIP, color: INK3,
-                  }}>{badge}</span>
+                    padding: "4px 12px", borderRadius: 99, background: CHIP, color: INK3,
+                  }}>{b}</span>
                 ))}
               </div>
 
-              {/* Name */}
+              {/* Greeting block */}
               <div>
-                <p style={{ fontFamily: FONT, fontWeight: 200, fontSize: 16, color: INK3, letterSpacing: 1, marginBottom: 6, textTransform: "uppercase" as const }}>
-                  Thanks for all of your help
-                </p>
-                <h1 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 62, color: INK, letterSpacing: -2.5, lineHeight: 0.95, margin: 0 }}>
-                  Hi<br/>Valera!
-                </h1>
+                <p style={{
+                  fontFamily: FONT, fontWeight: 200, fontSize: 12,
+                  color: INK3, letterSpacing: 2.5, textTransform: "uppercase" as const,
+                  margin: "0 0 10px",
+                }}>Thanks for all of your help</p>
+                <h1 style={{
+                  fontFamily: FONT, fontWeight: 900, fontSize: 68,
+                  color: INK, letterSpacing: -3, lineHeight: 0.92, margin: 0,
+                }}>Hi Valera!</h1>
               </div>
 
-              {/* Sub */}
-              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.7, maxWidth: 340, margin: 0 }}>
-                Ticket Help Desk Project — <strong style={{ fontWeight: 600, color: INK2 }}>Little Tree & Le Roi</strong>
-              </p>
+              {/* Project name */}
+              <div style={{ display: "flex", flexDirection: "column" as const, gap: 3 }}>
+                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 10, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>Project</span>
+                <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: INK, letterSpacing: -0.3 }}>
+                  Ticket Help Desk — Little Tree &amp; Le Roi
+                </span>
+              </div>
             </div>
 
-            {/* Figure panel */}
+            {/* ── RIGHT: dark status card ── */}
             <div style={{
-              width: 220, flexShrink: 0,
-              background: CHIP,
-              borderLeft: `1px solid ${RULE}`,
-              display: "flex", alignItems: "flex-end", justifyContent: "center",
-              padding: "0 20px",
-              backgroundImage: "radial-gradient(circle, #DADADA 1px, transparent 1px)",
-              backgroundSize: "22px 22px",
+              width: 240, flexShrink: 0,
+              background: INK, borderRadius: 16,
+              padding: "24px 24px 22px",
+              display: "flex", flexDirection: "column" as const, gap: 20,
             }}>
-              <WavingFigure size={160} />
+
+              {/* Session label */}
+              <div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 4 }}>Current</div>
+                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Session 2</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 3 }}>April 15, 2026</div>
+              </div>
+
+              {/* Divider */}
+              <div style={{ height: 1, background: "rgba(255,255,255,0.08)" }} />
+
+              {/* Progress */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const }}>Milestones</span>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>7 / 12</span>
+                </div>
+                {/* Progress bar */}
+                <div style={{ height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden" as const }}>
+                  <div style={{ height: "100%", width: "58%", background: "#fff", borderRadius: 99 }} />
+                </div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.25)", marginTop: 5, letterSpacing: 0.3 }}>58% complete</div>
+              </div>
+
+              {/* Divider */}
+              <div style={{ height: 1, background: "rgba(255,255,255,0.08)" }} />
+
+              {/* Next up */}
+              <div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 6 }}>Up next</div>
+                <div style={{ fontFamily: FONT, fontWeight: 600, fontSize: 12, color: "#fff", lineHeight: 1.4 }}>Supabase CLI + Schema setup</div>
+              </div>
+
             </div>
           </div>
         </div>
