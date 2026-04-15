@@ -207,7 +207,7 @@ function ProgressTimeline() {
                     color: now ? INK : done ? INK2 : INK3,
                     letterSpacing: now ? 0.2 : 0,
                   }}>{m.label}</div>
-                  <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 8.5, color: now ? INK3 : "#C0C0C0", marginTop: 2, letterSpacing: 0.2 }}>{m.sub}</div>
+                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 8.5, color: now ? INK2 : INK3, marginTop: 2, letterSpacing: 0.2 }}>{m.sub}</div>
                 </div>
               </div>
             )
@@ -221,11 +221,11 @@ function ProgressTimeline() {
           <div style={{ height: "100%", width: `${(doneCount / total) * 100}%`, background: INK, borderRadius: 99 }}/>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "#C0C0C0", letterSpacing: 0.5 }}>Project start</span>
+          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.5 }}>Project start</span>
           <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 9, color: INK3 }}>
             {total - doneCount - 1} steps remaining after today
           </span>
-          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "#C0C0C0", letterSpacing: 0.5 }}>Launch</span>
+          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.5 }}>Launch</span>
         </div>
       </div>
 
@@ -403,9 +403,9 @@ export default function App() {
                 </span>
                 {["April 15, 2026", "Session 2"].map(b => (
                   <span key={b} style={{
-                    fontFamily: FONT, fontSize: 9, fontWeight: 300,
+                    fontFamily: FONT, fontSize: 9, fontWeight: 600,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
-                    padding: "4px 12px", borderRadius: 99, background: CHIP, color: INK3,
+                    padding: "4px 12px", borderRadius: 99, background: CHIP, color: INK2,
                   }}>{b}</span>
                 ))}
               </div>
@@ -444,7 +444,7 @@ export default function App() {
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 4 }}>Current</div>
                 <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Session 2</div>
-                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 3 }}>April 15, 2026</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>April 15, 2026</div>
               </div>
 
               {/* Divider */}
@@ -460,7 +460,7 @@ export default function App() {
                 <div style={{ height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden" as const }}>
                   <div style={{ height: "100%", width: "58%", background: "#fff", borderRadius: 99 }} />
                 </div>
-                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.25)", marginTop: 5, letterSpacing: 0.3 }}>58% complete</div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>58% complete</div>
               </div>
 
               {/* Divider */}
@@ -621,7 +621,7 @@ export default function App() {
                     <line x1="3" y1="8" x2="13" y2="8" stroke="#C0C0C0" strokeWidth="1.8" strokeLinecap="round"/>
                   </svg>
                 </div>
-                <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "#C0C0C0" }}>Add next meeting link here</span>
+                <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3 }}>Add next meeting link here</span>
               </div>
             </div>
 
