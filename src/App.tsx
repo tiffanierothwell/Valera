@@ -275,6 +275,7 @@ const TODAY_DATE      = 15
 
 
 function AprilCalendar() {
+  const isMobile = useIsMobile()
   const [hovered, setHovered] = useState<number | null>(null)
 
   const cells: (number | null)[] = [
@@ -346,8 +347,8 @@ function AprilCalendar() {
                 lineHeight: 1,
               }}>{day}</span>
 
-              {/* Tooltip */}
-              {hovered === day && APRIL_MEETINGS[day] && (
+              {/* Tooltip — desktop only (no hover state on touch) */}
+              {!isMobile && hovered === day && APRIL_MEETINGS[day] && (
                 <div style={{
                   position: "absolute" as const,
                   bottom: "calc(100% + 8px)",
