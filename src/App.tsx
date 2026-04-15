@@ -156,19 +156,18 @@ function ProgressTimeline() {
       </div>
 
       {/* Track + steps */}
-      <div style={{ overflowX: isMobile ? "auto" : "visible", overflowY: "visible" }}>
-      <div style={{ position: "relative" as const, minWidth: isMobile ? 700 : "auto" }}>
+      <div style={{ position: "relative" as const }}>
 
         {/* Grey track */}
         <div style={{
           position: "absolute" as const,
-          top: 27, left: `${halfStep}%`, right: `${halfStep}%`,
+          top: isMobile ? 10 : 27, left: `${halfStep}%`, right: `${halfStep}%`,
           height: 2, background: RULE, borderRadius: 99, zIndex: 0,
         }}/>
         {/* Black fill */}
         <div style={{
           position: "absolute" as const,
-          top: 27, left: `${halfStep}%`,
+          top: isMobile ? 10 : 27, left: `${halfStep}%`,
           width: `${fillPct - halfStep}%`,
           height: 2, background: INK, borderRadius: 99, zIndex: 1,
         }}/>
@@ -179,53 +178,62 @@ function ProgressTimeline() {
             const done  = m.status === "done"
             const now   = m.status === "now"
             const later = m.status === "later"
+            const circleSize = isMobile ? 18 : 26
             return (
               <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 0 }}>
 
-                {/* "TODAY" pin above current */}
-                <div style={{ height: 18, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 2 }}>
-                  {now && (
-                    <span style={{
-                      fontFamily: FONT, fontWeight: 800, fontSize: 7.5, letterSpacing: 1.5,
-                      textTransform: "uppercase" as const,
-                      background: INK, color: "#fff",
-                      padding: "2px 7px", borderRadius: 99,
-                    }}>Today</span>
-                  )}
-                </div>
+                {/* "TODAY" pin above current — desktop only */}
+                {!isMobile && (
+                  <div style={{ height: 18, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 2 }}>
+                    {now && (
+                      <span style={{
+                        fontFamily: FONT, fontWeight: 800, fontSize: 7.5, letterSpacing: 1.5,
+                        textTransform: "uppercase" as const,
+                        background: INK, color: "#fff",
+                        padding: "2px 7px", borderRadius: 99,
+                      }}>Today</span>
+                    )}
+                  </div>
+                )}
 
                 {/* Circle */}
                 <div style={{
-                  width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                  width: circleSize, height: circleSize, borderRadius: "50%", flexShrink: 0,
                   background: done ? INK : "#fff",
                   border: done ? `2px solid ${INK}` : now ? `2.5px solid ${INK}` : `2px solid #D8D8D8`,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: now ? "0 0 0 5px rgba(0,0,0,0.07)" : "none",
+                  boxShadow: now ? "0 0 0 4px rgba(0,0,0,0.09)" : "none",
                 }}>
                   {done && (
-                    <svg width="11" height="11" viewBox="0 0 12 12">
+                    <svg width={isMobile ? 7 : 11} height={isMobile ? 7 : 11} viewBox="0 0 12 12">
                       <polyline points="2,6 5,9 10,3" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   )}
-                  {now && <div style={{ width: 8, height: 8, borderRadius: "50%", background: INK }}/>}
-                  {later && <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D8D8D8" }}/>}
+                  {now && <div style={{ width: isMobile ? 6 : 8, height: isMobile ? 6 : 8, borderRadius: "50%", background: INK }}/>}
+                  {later && <div style={{ width: isMobile ? 4 : 6, height: isMobile ? 4 : 6, borderRadius: "50%", background: "#D8D8D8" }}/>}
                 </div>
 
-                {/* Labels */}
-                <div style={{ marginTop: 9, textAlign: "center" as const, lineHeight: 1.35, padding: "0 2px" }}>
-                  <div style={{
-                    fontFamily: FONT, fontSize: 9.5,
-                    fontWeight: now ? 800 : done ? 600 : 400,
-                    color: now ? INK : done ? INK2 : INK3,
-                    letterSpacing: now ? 0.2 : 0,
-                  }}>{m.label}</div>
-                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 8.5, color: now ? INK2 : INK3, marginTop: 2, letterSpacing: 0.2 }}>{m.sub}</div>
-                </div>
+                {/* Labels — desktop only */}
+                {!isMobile && (
+                  <div style={{ marginTop: 9, textAlign: "center" as const, lineHeight: 1.35, padding: "0 2px" }}>
+                    <div style={{
+                      fontFamily: FONT, fontSize: 9.5,
+                      fontWeight: now ? 800 : done ? 600 : 400,
+                      color: now ? INK : done ? INK2 : INK3,
+                      letterSpacing: now ? 0.2 : 0,
+                    }}>{m.label}</div>
+                    <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 8.5, color: now ? INK2 : INK3, marginTop: 2, letterSpacing: 0.2 }}>{m.sub}</div>
+                  </div>
+                )}
+
+                {/* Mobile: "TODAY" dot indicator below circle */}
+                {isMobile && now && (
+                  <div style={{ width: 4, height: 4, borderRadius: "50%", background: INK, marginTop: 4 }}/>
+                )}
               </div>
             )
           })}
         </div>
-      </div>
       </div>
 
       {/* Bottom progress bar */}
@@ -387,7 +395,7 @@ function AprilCalendar() {
 export default function App() {
   const isMobile = useIsMobile()
   return (
-    <div style={{ minHeight: "100vh", background: "#F2F2F2", padding: isMobile ? "20px 14px 60px" : "40px 28px 80px", fontFamily: FONT, overflowX: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: "#F2F2F2", padding: isMobile ? "20px 16px 60px" : "40px 28px 80px", fontFamily: FONT }}>
       <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
 
