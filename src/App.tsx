@@ -1,197 +1,191 @@
 import './App.css'
 
-const O = "#E87830";
-const G = "#2E7D32";
-const B = "#0077B6";
-const R = "#C62828";
-const SLATE = "#374151";
+// ── Status pill ──────────────────────────────────────────────
+function Pill({ label, type }: { label: string; type: "done" | "pending" | "blocked" | "yours" }) {
+  const styles = {
+    done:    { bg: "#E8F5E9", color: "#2E7D32", border: "#2E7D321A" },
+    pending: { bg: "#FFF8F0", color: "#E87830", border: "#E878301A" },
+    blocked: { bg: "#FFF3F3", color: "#C62828", border: "#C628281A" },
+    yours:   { bg: "#EDE7FF", color: "#5C35CC", border: "#5C35CC1A" },
+  }[type];
+  return (
+    <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, padding: "3px 9px", borderRadius: 20, background: styles.bg, color: styles.color, border: `1px solid ${styles.border}`, whiteSpace: "nowrap" as const }}>
+      {label}
+    </span>
+  );
+}
 
+// ── Row item ─────────────────────────────────────────────────
+function Item({ label, value, pill }: { label: string; value: string; pill?: React.ReactNode }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 0", borderBottom: "1px solid #F0F0F0", gap: 12 }}>
+      <span style={{ fontSize: 12, color: "#888", minWidth: 120 }}>{label}</span>
+      <span style={{ fontSize: 13, fontWeight: 600, color: "#111", flex: 1 }}>{value}</span>
+      {pill}
+    </div>
+  );
+}
+
+// ── Section wrapper ───────────────────────────────────────────
+function Section({ title, accent, children }: { title: string; accent: string; children: React.ReactNode }) {
+  return (
+    <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #EBEBEB", overflow: "hidden", marginBottom: 20 }}>
+      <div style={{ padding: "12px 20px", borderBottom: "1px solid #F0F0F0", display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ width: 3, height: 16, background: accent, borderRadius: 2 }} />
+        <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "#333" }}>{title}</span>
+      </div>
+      <div style={{ padding: "4px 20px 16px" }}>{children}</div>
+    </div>
+  );
+}
+
+// ── Step card ─────────────────────────────────────────────────
+function Step({ n, title, who, detail, status }: { n: number; title: string; who: string; detail: string; status: "done" | "pending" | "blocked" | "yours" }) {
+  const accent = { done: "#2E7D32", pending: "#E87830", blocked: "#C62828", yours: "#5C35CC" }[status];
+  return (
+    <div style={{ display: "flex", gap: 14, padding: "14px 0", borderBottom: "1px solid #F5F5F5" }}>
+      <div style={{ width: 28, height: 28, borderRadius: "50%", background: accent + "18", color: accent, fontWeight: 800, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>{n}</div>
+      <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+          <span style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{title}</span>
+          <Pill label={who} type={status} />
+        </div>
+        <p style={{ margin: 0, fontSize: 13, color: "#666", lineHeight: 1.55 }}>{detail}</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Main ─────────────────────────────────────────────────────
 export default function App() {
   return (
-    <div style={{ background: "#F7F7F7", minHeight: "100vh", fontFamily: "'Inter', 'Segoe UI', sans-serif", padding: "40px 24px" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto" }}>
+    <div style={{ background: "#F4F4F6", minHeight: "100vh", fontFamily: "'Inter', 'Segoe UI', sans-serif", padding: "36px 24px" }}>
+      <div style={{ maxWidth: 820, margin: "0 auto" }}>
 
         {/* HEADER */}
-        <div style={{ marginBottom: 40 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 4, height: 24, background: O, borderRadius: 2 }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: O }}>AAA Coaching · Valera Tumash · April 15, 2026</span>
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: "#999" }}>AAA Accelerator · Coaching Brief · April 15, 2026</span>
           </div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: "#111", margin: "0 0 10px" }}>
-            Venditio POS Help Desk — Where We Are
-          </h1>
-          <p style={{ color: "#666", margin: 0, fontSize: 14, lineHeight: 1.7, maxWidth: 680 }}>
-            A simple briefing for Valera. This reflects everything decided in the April 15 meeting with Andre Boudreault, Valera Tumash, and Tiffanie Rothwell.
-          </p>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 12 }}>
+            <div>
+              <h1 style={{ fontSize: 26, fontWeight: 800, color: "#111", margin: "0 0 4px" }}>Little Tree — POS Help Desk</h1>
+              <p style={{ color: "#777", margin: 0, fontSize: 14 }}>Tiffanie Rothwell &nbsp;·&nbsp; Client of Mike David (MJM Ventures)</p>
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
+              <Pill label="App: Built" type="done" />
+              <Pill label="Backend: Not Connected" type="blocked" />
+              <Pill label="Next: Supabase CLI" type="yours" />
+            </div>
+          </div>
         </div>
 
-        {/* WHAT IS THIS APP */}
-        <Block color={B} title="What is this app?">
-          <p style={body}>
-            An internal IT help desk ticket system for three store locations owned by Mike David: <strong>Little Tree Gas</strong>, <strong>Le Roi Convenience</strong>, and <strong>Medicine Box</strong>.
-          </p>
-          <p style={body}>
-            Store staff submit a ticket when something breaks with the POS system. The manager sees all tickets in a queue, updates statuses, and resolves issues. Owners get daily reports.
-          </p>
-        </Block>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
 
-        {/* WHERE WE ARE TODAY */}
-        <Block color={G} title="Where we are today">
-          <Row icon="✅" text="The full app is built in PHP — all screens, all flows, working with mock data" />
-          <Row icon="✅" text="4-step ticket submit wizard with photo upload UI" />
-          <Row icon="✅" text="Manager board: Urgent Queue → Open → Closed → Archive" />
-          <Row icon="✅" text="Ticket detail with status bar: New → In Process → Needs Approval → Completed" />
-          <Row icon="✅" text="Operations dashboard with analytics and filters" />
-          <div style={{ marginTop: 14, background: "#FFF8F0", border: `1px solid ${O}44`, borderRadius: 10, padding: "12px 16px" }}>
-            <span style={{ fontWeight: 700, color: O, fontSize: 13 }}>What's missing: </span>
-            <span style={{ fontSize: 13, color: "#555" }}>A real database, real file storage, real logins, and real email notifications. Right now everything runs on mock data only.</span>
+          {/* LEFT COLUMN */}
+          <div>
+            {/* WHAT IS THIS */}
+            <Section title="Project in one sentence" accent="#0077B6">
+              <p style={{ fontSize: 14, color: "#444", lineHeight: 1.65, margin: "12px 0 0" }}>
+                An internal IT ticketing system for 3 gas station / convenience store locations. Staff submit tickets when POS breaks. Manager triages. Owner gets daily reports. <strong>No customer-facing component.</strong>
+              </p>
+            </Section>
+
+            {/* WHAT'S BUILT */}
+            <Section title="What exists today" accent="#2E7D32">
+              <Item label="Language" value="PHP + HTML/CSS" pill={<Pill label="Do not change" type="pending" />} />
+              <Item label="Frontend" value="All screens built" pill={<Pill label="Done" type="done" />} />
+              <Item label="Submit wizard" value="4-step form + photo upload UI" pill={<Pill label="Done" type="done" />} />
+              <Item label="Manager board" value="Queue → Open → Closed → Archive" pill={<Pill label="Done" type="done" />} />
+              <Item label="Status flow" value="New → In Process → Needs Approval → Completed" pill={<Pill label="Done" type="done" />} />
+              <Item label="Analytics dashboard" value="Ticket counts, SLA %, filters" pill={<Pill label="Done" type="done" />} />
+              <Item label="Database" value="Mock data only — not connected" pill={<Pill label="Missing" type="blocked" />} />
+              <Item label="File storage" value="Photo upload UI exists, nowhere to save" pill={<Pill label="Missing" type="blocked" />} />
+              <Item label="Auth / login" value="No real login yet" pill={<Pill label="Missing" type="blocked" />} />
+              <Item label="Emails" value="Not wired up yet" pill={<Pill label="Missing" type="blocked" />} />
+            </Section>
+
+            {/* PEOPLE */}
+            <Section title="People involved" accent="#E87830">
+              <Item label="Tiffanie" value="Project owner — builds with Claude Code, not a developer" />
+              <Item label="Andre Boudreault" value="IT lead, 10+ yrs with Mike. Manages the server + MySQL DB. Comfortable with MySQL, not Supabase support." />
+              <Item label="Mike David" value="Business owner — wants daily reports, approves tickets" />
+              <Item label="Valera" value="You — coaching Tiffanie through the technical build" />
+            </Section>
           </div>
-        </Block>
 
-        {/* WHAT WAS DECIDED */}
-        <Block color={SLATE} title="What was decided in today's meeting">
-          <Decision
-            icon="🏗️"
-            title="Hosting → Andre's data center"
-            detail="The PHP app files will live on Andre's existing server. Vercel is NOT an option — Vercel only supports JavaScript apps, not PHP."
-          />
-          <Decision
-            icon="🗄️"
-            title="Database + File Storage → Supabase"
-            detail="All ticket records and photo attachments go to Supabase. Not on Andre's server — storing photos there would eat up too much space and cost money."
-          />
-          <Decision
-            icon="🔐"
-            title="Login / Authentication → Andre's MySQL (read-only)"
-            detail="The login page will check against Andre's existing MySQL database. He already has a table of all store staff with their store assignments and roles. Read-only access only — nothing gets written to MySQL."
-          />
-          <Decision
-            icon="📧"
-            title="Email notifications → PHP Mailer"
-            detail="PHP Mailer is already installed on Andre's server. He will provide the connection details. No Make.com or external automation platform needed."
-          />
-          <Decision
-            icon="🤖"
-            title="No Make.com automations needed"
-            detail="Valera confirmed: these are simple linear triggers — form submits, send email, update status. Claude Code builds all of this directly into the PHP app. Simple is the goal."
-          />
-          <Decision
-            icon="👣"
-            title="Baby steps — one thing at a time"
-            detail="Andre's explicit instruction: finish one step completely before starting the next. Do not try to do everything at once — it will crash and burn."
-          />
-        </Block>
-
-        {/* NEXT STEPS */}
-        <Block color={O} title="Next steps — in this exact order">
-          <Step n={1} color={B} title="Supabase CLI Setup" who="Valera leads this with Tiffanie">
-            Install the Supabase CLI on Tiffanie's Mac. Authorize it to her Supabase account so Claude Code can create tables and manage the database directly from the terminal. Andre has already sent the Supabase connection details by email.
-          </Step>
-          <Step n={2} color={O} title="Redesign app for Supabase" who="Tiffanie + Claude Code">
-            Tell Claude Code to redesign the app to use Supabase for all data storage — tickets, stores, attachments, status updates. Generate the full database schema and set up file storage for photo uploads.
-          </Step>
-          <Step n={3} color={SLATE} title="Login page with MySQL" who="Tiffanie + Claude Code">
-            Build the login page to authenticate against Andre's MySQL database using the read-only user he provided. The store-selection dropdown on the submit form goes away — login determines the store automatically.
-          </Step>
-          <Step n={4} color={G} title="Wire up PHP Mailer emails" who="Tiffanie + Claude Code + Andre">
-            Add email notifications: new ticket → email Andre, status change → email submitter, 48hr untouched → escalation. Andre provides the PHP Mailer credentials.
-          </Step>
-          <Step n={5} color={R} title="Deploy to Andre's server" who="Tiffanie + Andre">
-            Upload all PHP app files to Andre's data center. App talks to Supabase for data, MySQL for login. Test the full flow live: submit ticket → manager sees it → email fires.
-          </Step>
-        </Block>
-
-        {/* VALERA'S ROLE */}
-        <Block color={G} title="What Tiffanie needs from Valera">
-          <Row icon="1️⃣" text="Help install and authorize the Supabase CLI on the new iMac — this unlocks everything" />
-          <Row icon="2️⃣" text="Review the database schema Claude Code generates to make sure it covers everything" />
-          <Row icon="3️⃣" text="Guide the instruction Tiffanie gives Claude Code for the MySQL login page" />
-          <Row icon="4️⃣" text="Validate Tiffanie's written project plan before she starts — Andre asked her to write it out and send to both of you" />
-        </Block>
-
-        {/* TECH STACK */}
-        <Block color={SLATE} title="Confirmed tech stack">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
-            {[
-              { label: "App language", value: "PHP", note: "Do not change this", ok: true },
-              { label: "App hosting", value: "Andre's server", note: "littletree.itgeneration.ca", ok: true },
-              { label: "Database", value: "Supabase", note: "Postgres — tickets & records", ok: true },
-              { label: "File storage", value: "Supabase Storage", note: "Photo attachments", ok: true },
-              { label: "Authentication", value: "MySQL (read-only)", note: "Andre's Cashiers table", ok: true },
-              { label: "Email", value: "PHP Mailer", note: "Already on Andre's server", ok: true },
-              { label: "Automations", value: "Built into PHP", note: "No Make.com needed", ok: true },
-              { label: "Vercel", value: "❌ Not used", note: "PHP not supported", ok: false },
-              { label: "Make.com", value: "❌ Not used", note: "Not needed", ok: false },
-            ].map((item) => (
-              <div key={item.label} style={{ background: "#fff", borderRadius: 10, padding: "12px 14px", border: "1px solid #eee" }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: "#bbb", textTransform: "uppercase" as const, letterSpacing: 1, marginBottom: 4 }}>{item.label}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: item.ok ? "#111" : R, marginBottom: 2 }}>{item.value}</div>
-                <div style={{ fontSize: 12, color: "#999" }}>{item.note}</div>
+          {/* RIGHT COLUMN */}
+          <div>
+            {/* AGREED TECH STACK */}
+            <Section title="Agreed architecture" accent="#5C35CC">
+              <Item label="App hosting" value="Andre's data center" pill={<Pill label="Confirmed" type="done" />} />
+              <Item label="Database" value="Supabase (Postgres)" pill={<Pill label="Confirmed" type="done" />} />
+              <Item label="File storage" value="Supabase Storage" pill={<Pill label="Confirmed" type="done" />} />
+              <Item label="Auth / login" value="MySQL read-only → Andre's Cashiers table" pill={<Pill label="Confirmed" type="done" />} />
+              <Item label="Email" value="PHP Mailer — already on Andre's server" pill={<Pill label="Confirmed" type="done" />} />
+              <Item label="Automations" value="Built into PHP — no Make.com, no n8n" pill={<Pill label="Confirmed" type="done" />} />
+              <Item label="Vercel" value="Not an option — PHP not supported" pill={<Pill label="Ruled out" type="blocked" />} />
+              <div style={{ marginTop: 12, background: "#F7F4FF", border: "1px solid #5C35CC22", borderRadius: 10, padding: "10px 14px" }}>
+                <p style={{ margin: 0, fontSize: 12, color: "#5C35CC", lineHeight: 1.6 }}>
+                  <strong>Andre's recommendation:</strong> Baby steps. Get Supabase connected first with Claude Code. Login + emails come after. Do not do everything at once.
+                </p>
               </div>
-            ))}
+            </Section>
+
+            {/* CREDENTIALS */}
+            <Section title="Credentials status" accent="#E87830">
+              <Item label="Supabase" value="Connection details received from Andre" pill={<Pill label="In hand" type="done" />} />
+              <Item label="MySQL" value="Read-only user + Cashiers table query provided" pill={<Pill label="In hand" type="done" />} />
+              <Item label="PHP Mailer" value="Andre to provide in next exchange" pill={<Pill label="Pending" type="pending" />} />
+              <div style={{ marginTop: 12, background: "#FFF8F0", border: "1px solid #E8783022", borderRadius: 10, padding: "10px 14px" }}>
+                <p style={{ margin: 0, fontSize: 12, color: "#E87830", lineHeight: 1.6 }}>
+                  <strong>Note:</strong> Credentials are stored privately — not published here. Tiffanie has them in email from Andre.
+                </p>
+              </div>
+            </Section>
+
+            {/* WHAT TIFFANIE NEEDS FROM VALERA */}
+            <Section title="What Tiffanie needs from you" accent="#5C35CC">
+              <div style={{ paddingTop: 8 }}>
+                <div style={{ background: "#F7F4FF", borderRadius: 10, padding: "12px 14px", marginBottom: 10 }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: "#5C35CC", letterSpacing: 1, textTransform: "uppercase" as const, marginBottom: 6 }}>🎯 This session's focus</div>
+                  <p style={{ margin: 0, fontSize: 13, color: "#333", lineHeight: 1.6, fontWeight: 600 }}>Walk Tiffanie through installing Supabase CLI on her new iMac and authorizing it to the Supabase account — so Claude Code can create the schema and tables directly.</p>
+                </div>
+                <div style={{ fontSize: 12, color: "#666", lineHeight: 1.7 }}>
+                  <div style={{ marginBottom: 6 }}>→ Review the schema Claude Code generates (tickets, stores, attachments, ticket_updates)</div>
+                  <div style={{ marginBottom: 6 }}>→ Guide her on the MySQL login page instruction for Claude Code</div>
+                  <div>→ Validate her written step-by-step plan before she starts building (Andre asked her to write it out and send to both of you)</div>
+                </div>
+              </div>
+            </Section>
           </div>
-        </Block>
+        </div>
 
-        {/* FOOTER */}
-        <div style={{ textAlign: "center" as const, marginTop: 40, fontSize: 11, color: "#ccc" }}>
-          MJM Ventures · Venditio POS Help Desk · AAA Coaching · April 2026
+        {/* NEXT STEPS - FULL WIDTH */}
+        <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #EBEBEB", overflow: "hidden", marginBottom: 20 }}>
+          <div style={{ padding: "12px 20px", borderBottom: "1px solid #F0F0F0", display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 3, height: 16, background: "#E87830", borderRadius: 2 }} />
+            <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "#333" }}>Build sequence — baby steps, in order</span>
+          </div>
+          <div style={{ padding: "0 20px" }}>
+            <Step n={1} title="Supabase CLI + Schema" who="Valera leads" status="yours"
+              detail="Install Supabase CLI on Tiffanie's Mac. Authorize to Supabase account. Claude Code generates the full schema and creates tables directly via CLI." />
+            <Step n={2} title="Redesign app for Supabase" who="Tiffanie + Claude Code" status="pending"
+              detail="Claude Code rewrites the PHP data layer to read/write from Supabase. Photo uploads go to Supabase Storage. Mock data is replaced with real DB calls." />
+            <Step n={3} title="Login page → MySQL auth" who="Tiffanie + Claude Code" status="pending"
+              detail="PHP login page queries Andre's MySQL Cashiers table (read-only). CashierType field sets role. Store dropdown removed — login sets the store from StoreNo." />
+            <Step n={4} title="PHP Mailer email triggers" who="Tiffanie + Andre + Claude Code" status="pending"
+              detail="Wire: new ticket → email Andre. Status change → email submitter. 48hr untouched → escalation. Andre provides PHP Mailer credentials." />
+            <Step n={5} title="Deploy to Andre's server" who="Tiffanie + Andre" status="pending"
+              detail="PHP app files go to littletree.itgeneration.ca. Data and photos stay in Supabase. Test full flow end-to-end." />
+          </div>
+        </div>
+
+        <div style={{ textAlign: "center" as const, fontSize: 11, color: "#bbb", paddingBottom: 20 }}>
+          MJM Ventures · Little Tree POS Help Desk · AAA Accelerator · April 2026
         </div>
 
       </div>
-    </div>
-  );
-}
-
-// ── Reusable Components ──────────────────────────────────────
-
-const body: React.CSSProperties = { fontSize: 14, color: "#444", lineHeight: 1.7, margin: "0 0 8px" };
-
-function Block({ color, title, children }: { color: string; title: string; children: React.ReactNode }) {
-  return (
-    <div style={{ marginBottom: 32 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-        <h2 style={{ fontSize: 17, fontWeight: 800, color: "#111", margin: 0 }}>{title}</h2>
-      </div>
-      <div style={{ height: 2, background: `linear-gradient(to right, ${color}, transparent)`, marginBottom: 14, borderRadius: 1 }} />
-      <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function Row({ icon, text }: { icon: string; text: string }) {
-  return (
-    <div style={{ display: "flex", gap: 10, alignItems: "flex-start", background: "#fff", borderRadius: 10, padding: "11px 14px", border: "1px solid #eee" }}>
-      <span style={{ fontSize: 16, lineHeight: 1.4 }}>{icon}</span>
-      <span style={{ fontSize: 13, color: "#333", lineHeight: 1.5 }}>{text}</span>
-    </div>
-  );
-}
-
-function Decision({ icon, title, detail }: { icon: string; title: string; detail: string }) {
-  return (
-    <div style={{ background: "#fff", borderRadius: 10, padding: "13px 16px", border: "1px solid #eee" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-        <span style={{ fontSize: 16 }}>{icon}</span>
-        <span style={{ fontWeight: 700, fontSize: 14, color: "#111" }}>{title}</span>
-      </div>
-      <p style={{ margin: 0, fontSize: 13, color: "#555", lineHeight: 1.6 }}>{detail}</p>
-    </div>
-  );
-}
-
-function Step({ n, color, title, who, children }: { n: number; color: string; title: string; who: string; children: React.ReactNode }) {
-  return (
-    <div style={{ background: "#fff", borderRadius: 12, overflow: "hidden", border: "1px solid #eee" }}>
-      <div style={{ background: color, padding: "10px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ background: "rgba(255,255,255,0.25)", color: "#fff", fontWeight: 800, fontSize: 13, borderRadius: "50%", width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center" }}>{n}</span>
-          <span style={{ color: "#fff", fontWeight: 700, fontSize: 14 }}>{title}</span>
-        </div>
-        <span style={{ background: "rgba(255,255,255,0.2)", color: "#fff", fontSize: 10, fontWeight: 700, padding: "2px 10px", borderRadius: 20 }}>{who}</span>
-      </div>
-      <p style={{ margin: 0, padding: "12px 16px", fontSize: 13, color: "#444", lineHeight: 1.6 }}>{children}</p>
     </div>
   );
 }
