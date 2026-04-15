@@ -325,7 +325,7 @@ function AprilCalendar() {
       {/* Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3, position: "relative" as const }}>
         {cells.map((day, i) => {
-          if (!day) return <div key={`e${i}`} style={{ height: 22, borderRadius: 6 }} />
+          if (!day) return <div key={`e${i}`} style={{ height: 28, borderRadius: 6 }} />
 
           const hasMeeting = !!APRIL_MEETINGS[day]
           const isToday    = day === TODAY_DATE
@@ -336,7 +336,7 @@ function AprilCalendar() {
             <div
               key={day}
               style={{
-                height: 22, borderRadius: 6,
+                height: 28, borderRadius: 6,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 position: "relative" as const,
                 cursor: hasMeeting ? "pointer" : "default",
@@ -508,6 +508,60 @@ export default function App() {
               </div>
             </div>
 
+            {/* ── FOCUS CARD — stacked in left col ── */}
+            <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+              {/* Top: white section */}
+              <div style={{ padding: "28px 28px 22px", background: "#fff" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: 1, background: INK }} />
+                  <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+                    This session's focus
+                  </span>
+                </div>
+                <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 17, color: INK, lineHeight: 1.4, letterSpacing: -0.4, margin: "0 0 12px" }}>
+                  Walk Tiffanie through Supabase CLI — install, authorize, and let Claude Code create the schema directly from terminal.
+                </h2>
+                <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, lineHeight: 1.7, margin: "0 0 16px" }}>
+                  Tiffanie has a new iMac. Supabase CLI is not installed. Once it's authorized, Claude Code can run the full schema migration without manual SQL.
+                </p>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
+                  {["Supabase CLI", "Schema migration", "Session 2"].map(tag => (
+                    <span key={tag} style={{
+                      fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
+                      color: INK2, background: CHIP,
+                      border: `1px solid ${RULE}`,
+                      padding: "3px 10px", borderRadius: 99,
+                    }}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom: dark section */}
+              <div style={{ background: INK, padding: "20px 28px 22px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: 1, background: "rgba(255,255,255,0.25)" }} />
+                  <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)" }}>
+                    Also needed
+                  </span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+                  {[
+                    "Review the schema Claude generates: tickets, stores, attachments, ticket_updates",
+                    "Guide the MySQL login instruction Tiffanie gives Claude Code",
+                    "Validate her written plan — Andre asked her to send it to both of you",
+                  ].map((t, i) => (
+                    <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                      <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: "rgba(255,255,255,0.2)", flexShrink: 0, lineHeight: 1.6, letterSpacing: 0.5 }}>0{i + 1}</span>
+                      <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{t}</p>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For Valera · April 15, 2026</span>
+                </div>
+              </div>
+            </div>
+
             {/* What exists today */}
             <div style={{ ...CARD, padding: "28px 28px", flex: 1 }}>
               <SectionLabel label="What exists today" />
@@ -536,24 +590,6 @@ export default function App() {
           {/* ── RIGHT COL ── */}
           <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
-            {/* Agreed architecture */}
-            <div style={{ ...CARD, padding: "28px 28px" }}>
-              <SectionLabel label="Agreed architecture" />
-              <Row label="App hosting"  value="Andre's server (littletree.itgeneration.ca)" pill={<Pill label="Confirmed" kind="solid"   />} />
-              <Row label="Database"     value="Supabase — Postgres"                         pill={<Pill label="Confirmed" kind="solid"   />} />
-              <Row label="File storage" value="Supabase Storage — photo attachments"        pill={<Pill label="Confirmed" kind="solid"   />} />
-              <Row label="Auth"         value="MySQL read-only → Cashiers table"            pill={<Pill label="Confirmed" kind="solid"   />} />
-              <Row label="Email"        value="PHP Mailer — already on Andre's server"      pill={<Pill label="Confirmed" kind="solid"   />} />
-              <Row label="Automations"  value="Built in PHP — no Make.com or n8n needed"   pill={<Pill label="Confirmed" kind="solid"   />} />
-              <Row label="Vercel"       value="Not an option — PHP not supported"           pill={<Pill label="Ruled out" kind="muted"   />} />
-              <div style={{ background: CHIP, borderRadius: 12, padding: "14px 16px", marginTop: 16 }}>
-                <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.7, margin: 0 }}>
-                  <span style={{ fontWeight: 700, color: INK }}>Andre's rule — </span>
-                  Baby steps. Supabase first. Login after. Emails after that. One step done before the next begins.
-                </p>
-              </div>
-            </div>
-
             {/* Credentials */}
             <div style={{ ...CARD, padding: "28px 28px" }}>
               <SectionLabel label="Credentials status" />
@@ -571,7 +607,6 @@ export default function App() {
             {/* Fireflies meetings */}
             <div style={{ ...CARD, padding: "28px 28px" }}>
               <SectionLabel label="Fireflies meeting recordings" />
-
               {([
                 {
                   title: "Andre + Valera — Tech Q&A",
@@ -580,51 +615,24 @@ export default function App() {
                   href:  "https://app.fireflies.ai/view/Google-Meet-Andre-Valera-Technical-questions-on-systems-tech-stack::01KP64FZBKSRF5YTWEGYT509F7",
                 },
               ] as { title: string; sub: string; date: string; href: string }[]).map(({ title, sub, date, href }) => (
-                <a
-                  key={href}
-                  href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    display: "flex", alignItems: "center", gap: 14,
-                    padding: "13px 14px", borderRadius: 12,
-                    background: CHIP, textDecoration: "none",
-                    border: `1px solid ${RULE}`,
-                    marginBottom: 10,
-                    transition: "background 0.15s",
-                  }}
-                >
-                  {/* Fireflies flame icon */}
-                  <div style={{
-                    width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                    background: "#fff", border: `1px solid ${RULE}`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 18,
-                  }}>🔥</div>
-
+                <a key={href} href={href} target="_blank" rel="noreferrer" style={{
+                  display: "flex", alignItems: "center", gap: 14,
+                  padding: "13px 14px", borderRadius: 12,
+                  background: CHIP, textDecoration: "none",
+                  border: `1px solid ${RULE}`, marginBottom: 10,
+                }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, background: "#fff", border: `1px solid ${RULE}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔥</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: INK, marginBottom: 2, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{title}</div>
                     <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: INK3 }}>{sub}</div>
                   </div>
-
                   <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
-                    <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.3 }}>{date}</span>
-                    <span style={{
-                      fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 1,
-                      textTransform: "uppercase" as const,
-                      color: INK, border: `1px solid ${INK}`,
-                      padding: "2px 7px", borderRadius: 99,
-                    }}>View ↗</span>
+                    <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3 }}>{date}</span>
+                    <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 1, textTransform: "uppercase" as const, color: INK, border: `1px solid ${INK}`, padding: "2px 7px", borderRadius: 99 }}>View ↗</span>
                   </div>
                 </a>
               ))}
-
-              {/* Empty slot hint */}
-              <div style={{
-                border: `1.5px dashed ${RULE}`, borderRadius: 12,
-                padding: "12px 14px",
-                display: "flex", alignItems: "center", gap: 10,
-              }}>
+              <div style={{ border: `1.5px dashed ${RULE}`, borderRadius: 12, padding: "12px 14px", display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: CHIP, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <line x1="8" y1="3" x2="8" y2="13" stroke="#C0C0C0" strokeWidth="1.8" strokeLinecap="round"/>
@@ -635,93 +643,24 @@ export default function App() {
               </div>
             </div>
 
-          </div>
-        </div>
-
-
-        {/* ════════════════════════════════════════
-            FOCUS CARD — split light / dark
-        ════════════════════════════════════════ */}
-        <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
-          <div style={{ display: "flex", alignItems: "stretch", minHeight: 220 }}>
-
-            {/* LEFT — light panel */}
-            <div style={{ flex: 1, padding: "36px 40px", background: "#fff", display: "flex", flexDirection: "column" as const, justifyContent: "space-between" }}>
-
-              {/* Label */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
-                <div style={{ width: 6, height: 6, borderRadius: 2, background: INK }} />
-                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-                  This session's focus
-                </span>
-              </div>
-
-              {/* Big headline */}
-              <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 22, color: INK, lineHeight: 1.35, letterSpacing: -0.6, margin: "0 0 16px" }}>
-                Walk Tiffanie through Supabase CLI — install, authorize, and let Claude Code create the schema directly from terminal.
-              </h2>
-
-              {/* Description */}
-              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.75, margin: 0 }}>
-                Tiffanie has a new iMac. Supabase CLI is not installed. Once it's authorized, Claude Code can run the full schema migration without manual SQL.
-              </p>
-
-              {/* Tag pills */}
-              <div style={{ display: "flex", gap: 8, marginTop: 24, flexWrap: "wrap" as const }}>
-                {["Supabase CLI", "Schema migration", "Session 2"].map(tag => (
-                  <span key={tag} style={{
-                    fontFamily: FONT, fontWeight: 500, fontSize: 10,
-                    color: INK2, background: CHIP,
-                    border: `1px solid ${RULE}`,
-                    padding: "4px 12px", borderRadius: 99,
-                  }}>{tag}</span>
-                ))}
+            {/* Agreed architecture — moved lower */}
+            <div style={{ ...CARD, padding: "28px 28px" }}>
+              <SectionLabel label="Agreed architecture" />
+              <Row label="App hosting"  value="Andre's server (littletree.itgeneration.ca)" pill={<Pill label="Confirmed" kind="solid"   />} />
+              <Row label="Database"     value="Supabase — Postgres"                         pill={<Pill label="Confirmed" kind="solid"   />} />
+              <Row label="File storage" value="Supabase Storage — photo attachments"        pill={<Pill label="Confirmed" kind="solid"   />} />
+              <Row label="Auth"         value="MySQL read-only → Cashiers table"            pill={<Pill label="Confirmed" kind="solid"   />} />
+              <Row label="Email"        value="PHP Mailer — already on Andre's server"      pill={<Pill label="Confirmed" kind="solid"   />} />
+              <Row label="Automations"  value="Built in PHP — no Make.com or n8n needed"   pill={<Pill label="Confirmed" kind="solid"   />} />
+              <Row label="Vercel"       value="Not an option — PHP not supported"           pill={<Pill label="Ruled out" kind="muted"   />} />
+              <div style={{ background: CHIP, borderRadius: 12, padding: "14px 16px", marginTop: 16 }}>
+                <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.7, margin: 0 }}>
+                  <span style={{ fontWeight: 700, color: INK }}>Andre's rule — </span>
+                  Baby steps. Supabase first. Login after. Emails after that. One step done before the next begins.
+                </p>
               </div>
             </div>
 
-            {/* RIGHT — dark panel */}
-            <div style={{
-              width: 320, flexShrink: 0,
-              background: INK,
-              borderRadius: "0 20px 20px 0",
-              padding: "36px 32px",
-              display: "flex", flexDirection: "column" as const, justifyContent: "space-between",
-            }}>
-
-              {/* Label */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
-                <div style={{ width: 6, height: 6, borderRadius: 2, background: "rgba(255,255,255,0.25)" }} />
-                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)" }}>
-                  Also needed
-                </span>
-              </div>
-
-              {/* Numbered items */}
-              <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 20 }}>
-                {[
-                  "Review the schema Claude generates: tickets, stores, attachments, ticket_updates",
-                  "Guide the MySQL login instruction Tiffanie gives Claude Code",
-                  "Validate her written plan — Andre asked her to send it to both of you",
-                ].map((t, i) => (
-                  <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-                    <span style={{
-                      fontFamily: FONT, fontWeight: 900, fontSize: 11,
-                      color: "rgba(255,255,255,0.18)",
-                      lineHeight: 1.5, flexShrink: 0, letterSpacing: 0.5,
-                    }}>0{i + 1}</span>
-                    <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: "rgba(255,255,255,0.65)", lineHeight: 1.65, margin: 0 }}>{t}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Bottom label */}
-              <div style={{ marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: 0.5 }}>
-                  For Valera · April 15, 2026
-                </span>
-              </div>
-
-            </div>
           </div>
         </div>
 
