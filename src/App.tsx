@@ -407,10 +407,10 @@ export default function App() {
           {/* Black top accent stripe */}
           <div style={{ height: 4, background: INK, width: "100%" }} />
 
-          <div style={{ padding: isMobile ? "22px 20px 24px" : "36px 40px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "flex-start", gap: isMobile ? 20 : 32 }}>
+          <div style={{ padding: isMobile ? "22px 20px 24px" : "36px 40px 40px", display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "stretch", gap: isMobile ? 20 : 32 }}>
 
             {/* ── LEFT: main greeting ── */}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 28 }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, justifyContent: isMobile ? "flex-start" : "space-between", gap: isMobile ? 20 : 0 }}>
 
               {/* Badge row */}
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" as const }}>
@@ -458,8 +458,8 @@ export default function App() {
             <div style={{
               width: isMobile ? "100%" : 240, flexShrink: isMobile ? undefined : 0,
               background: INK, borderRadius: 16,
-              padding: "24px 24px 22px",
-              display: "flex", flexDirection: "column" as const, gap: 20,
+              padding: "24px 24px 24px",
+              display: "flex", flexDirection: "column" as const,
             }}>
 
               {/* Session label */}
@@ -470,7 +470,7 @@ export default function App() {
               </div>
 
               {/* Divider */}
-              <div style={{ height: 1, background: "rgba(255,255,255,0.08)" }} />
+              <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "20px 0" }} />
 
               {/* Progress */}
               <div>
@@ -485,8 +485,11 @@ export default function App() {
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>58% complete</div>
               </div>
 
+              {/* Spacer — pushes Up Next to bottom */}
+              <div style={{ flex: 1 }} />
+
               {/* Divider */}
-              <div style={{ height: 1, background: "rgba(255,255,255,0.08)" }} />
+              <div style={{ height: 1, background: "rgba(255,255,255,0.08)", marginBottom: 20 }} />
 
               {/* Next up */}
               <div>
