@@ -217,7 +217,7 @@ const html = `<!DOCTYPE html>
       <div class="left">
         <div class="badges">
           <span class="badge-dark"><span class="slash">///</span> Accelerator</span>
-          <span class="badge-chip">April 15, 2026</span>
+          <span class="badge-chip">April 20, 2026</span>
           <span class="badge-chip">Session 5</span>
         </div>
         <div>
@@ -235,7 +235,7 @@ const html = `<!DOCTYPE html>
         <div>
           <div class="status-label">Current</div>
           <div class="status-session">Session 5</div>
-          <div class="status-date">April 15, 2026</div>
+          <div class="status-date">April 20, 2026</div>
         </div>
         <div class="divider"></div>
         <div>

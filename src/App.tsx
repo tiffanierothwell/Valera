@@ -259,19 +259,20 @@ function ProgressTimeline() {
 
 // ── April 2026 meeting data ───────────────────────────────────
 // Add meetings here: day number → { title, who[] }
-const APRIL_MEETINGS: Record<number, { title: string; who: string[] }> = {
+const APRIL_MEETINGS: Record<number, { title: string; time?: string; who: string[] }> = {
    3: { title: "AAA On-boarding",              who: ["Tiffanie Rothwell", "Mara"] },
    7: { title: "Coaching with Valera",         who: ["Mike David", "Tiffanie Rothwell", "Valera Tumash"] },
    9: { title: "Coaching with Valera",         who: ["Mike David", "Tiffanie Rothwell", "Valera Tumash"] },
   14: { title: "Coaching with Valera",         who: ["Mike David", "Tiffanie Rothwell", "Valera Tumash"] },
   15: { title: "Coaching with Valera",         who: ["Andre B.", "Tiffanie Rothwell", "Valera Tumash"] },
   16: { title: "Coaching with Valera",         who: ["Tiffanie Rothwell", "Valera Tumash"] },
+  20: { title: "Coaching with Valera",         time: "9:00 AM", who: ["Tiffanie Rothwell", "Valera Tumash"] },
 }
 
 // April 1, 2026 = Wednesday (index 3, Sun=0)
 const APRIL_START_DAY = 3
 const APRIL_DAYS      = 30
-const TODAY_DATE      = 15
+const TODAY_DATE      = 20
 
 
 function AprilCalendar() {
@@ -364,7 +365,7 @@ function AprilCalendar() {
                   pointerEvents: "none" as const,
                 }}>
                   <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 8.5, color: "rgba(255,255,255,0.4)", letterSpacing: 1, textTransform: "uppercase" as const, marginBottom: 5 }}>
-                    April {day}, 2026
+                    April {day}, 2026{APRIL_MEETINGS[day].time ? ` · ${APRIL_MEETINGS[day].time}` : ""}
                   </div>
                   <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11, color: "#fff", marginBottom: 7, lineHeight: 1.3 }}>
                     {APRIL_MEETINGS[day].title}
@@ -427,7 +428,7 @@ export default function App() {
                   <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11 }}>///</span>
                   <span style={{ color: "#fff" }}>Accelerator</span>
                 </span>
-                {["April 15, 2026", "Session 5"].map(b => (
+                {["April 20, 2026", "Session 5"].map(b => (
                   <span key={b} style={{
                     fontFamily: FONT, fontSize: 9, fontWeight: 600,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
@@ -470,7 +471,7 @@ export default function App() {
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 4 }}>Current</div>
                 <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Session 5</div>
-                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>April 15, 2026</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>April 20, 2026</div>
               </div>
 
               {/* Divider */}
@@ -682,7 +683,7 @@ export default function App() {
                   ))}
                 </div>
                 <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For Valera · April 15, 2026</span>
+                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For Valera · April 20, 2026</span>
                 </div>
               </div>
             </div>
