@@ -513,6 +513,78 @@ export default function App() {
 
 
         {/* ════════════════════════════════════════
+            QUESTIONS FOR VALERA
+        ════════════════════════════════════════ */}
+        <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+          {/* Accent stripe */}
+          <div style={{ height: 3, background: "#FF1493", width: "100%" }} />
+          <div style={{ padding: isMobile ? "20px 16px 22px" : "28px 32px 30px" }}>
+
+            {/* Header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 20 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+                  Questions for Valera
+                </span>
+              </div>
+              <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
+                Session 5 · Today
+              </span>
+            </div>
+
+            {/* Questions list */}
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 0 }}>
+              {[
+                {
+                  q: "Andre's server is running PHP 5.6 and the app needs 8.x — is this something I should push Andre to fix now, or do we wait until we're closer to deployment?",
+                  tag: "Timeline risk",
+                },
+                {
+                  q: "Can you walk me through the Supabase CLI install step by step? I have a new iMac and haven't done this before — I want to make sure I don't skip anything.",
+                  tag: "Do it today",
+                },
+                {
+                  q: "Once the schema is set up, what exactly does Claude Code need from me to connect the app to Supabase? What information do I have to give it?",
+                  tag: "Next step clarity",
+                },
+                {
+                  q: "Andre sent me MySQL login credentials. When does that come into the picture — is that this week, or later when we do the login step?",
+                  tag: "Sequencing",
+                },
+                {
+                  q: "What should I do if I get stuck between now and our next session? How do you want me to describe the problem when I reach out?",
+                  tag: "Working together",
+                },
+              ].map(({ q, tag }, i) => (
+                <div key={i} style={{
+                  display: "flex", gap: isMobile ? 12 : 18, alignItems: "flex-start",
+                  padding: "14px 0",
+                  borderBottom: i < 4 ? `1px solid ${RULE}` : "none",
+                }}>
+                  {/* Number */}
+                  <div style={{
+                    width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                    background: INK, color: "#fff",
+                    fontFamily: FONT, fontWeight: 900, fontSize: 11,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    marginTop: 1,
+                  }}>{i + 1}</div>
+
+                  {/* Text + tag */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontFamily: FONT, fontWeight: 500, fontSize: isMobile ? 12 : 13, color: INK, lineHeight: 1.6, margin: "0 0 6px" }}>{q}</p>
+                    <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 8, letterSpacing: 1, textTransform: "uppercase" as const, color: INK3, background: CHIP, border: `1px solid ${RULE}`, padding: "2px 8px", borderRadius: 99 }}>{tag}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+
+
+        {/* ════════════════════════════════════════
             2-COL CONTENT GRID
         ════════════════════════════════════════ */}
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
