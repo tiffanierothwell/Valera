@@ -126,7 +126,7 @@ const MILESTONES: { label: string; sub: string; status: MS }[] = [
   { label: "Approval",      sub: "Andre confirms",      status: "done"  },
   { label: "Session 1",     sub: "Valera · intro",      status: "done"  },
   { label: "Tech Q&A",      sub: "Andre + Valera",      status: "done"  },
-  { label: "Supabase CLI",  sub: "TODAY · Session 5",   status: "now"   },
+  { label: "Supabase CLI",  sub: "TODAY · Session 6",   status: "now"   },
   { label: "Connect DB",    sub: "PHP + Supabase",      status: "later" },
   { label: "Login Auth",    sub: "MySQL · Cashiers",    status: "later" },
   { label: "Email Alerts",  sub: "PHP Mailer",          status: "later" },
@@ -428,7 +428,7 @@ export default function App() {
                   <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11 }}>///</span>
                   <span style={{ color: "#fff" }}>Accelerator</span>
                 </span>
-                {["April 20, 2026", "Session 5"].map(b => (
+                {["April 20, 2026", "Session 6"].map(b => (
                   <span key={b} style={{
                     fontFamily: FONT, fontSize: 9, fontWeight: 600,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
@@ -470,7 +470,7 @@ export default function App() {
               {/* Session label */}
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 4 }}>Current</div>
-                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Session 5</div>
+                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Session 6</div>
                 <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>April 20, 2026</div>
               </div>
 
@@ -530,7 +530,7 @@ export default function App() {
                 </span>
               </div>
               <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
-                Session 5 · Today
+                Session 6 · Today
               </span>
             </div>
 
@@ -652,7 +652,7 @@ export default function App() {
                   Tiffanie has a new iMac. Supabase CLI is not installed. Once it's authorized, Claude Code can run the full schema migration without manual SQL.
                 </p>
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
-                  {["Supabase CLI", "Schema migration", "Session 5"].map(tag => (
+                  {["Supabase CLI", "Schema migration", "Session 6"].map(tag => (
                     <span key={tag} style={{
                       fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
                       color: INK2, background: CHIP,
