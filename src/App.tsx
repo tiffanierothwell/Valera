@@ -126,7 +126,7 @@ const MILESTONES: { label: string; sub: string; status: MS }[] = [
   { label: "Approval",      sub: "Andre confirms",      status: "done"  },
   { label: "Session 1",     sub: "Valera · intro",      status: "done"  },
   { label: "Tech Q&A",      sub: "Andre + Valera",      status: "done"  },
-  { label: "Supabase CLI",  sub: "TODAY · Session 6",   status: "now"   },
+  { label: "Supabase CLI",  sub: "TODAY",                status: "now"   },
   { label: "Connect DB",    sub: "PHP + Supabase",      status: "later" },
   { label: "Login Auth",    sub: "MySQL · Cashiers",    status: "later" },
   { label: "Email Alerts",  sub: "PHP Mailer",          status: "later" },
@@ -530,7 +530,7 @@ export default function App() {
                 </span>
               </div>
               <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
-                Session 6 · Today
+                Today
               </span>
             </div>
 
