@@ -1,5 +1,7 @@
 import './App.css'
 import { useState, useEffect } from 'react'
+import { PM_DETAILS } from './data/pmDetails'
+import { BUILD_DAYS } from './data/buildDays'
 
 function useIsMobile(bp = 640) {
   const [mobile, setMobile] = useState(() => window.innerWidth < bp)
@@ -80,6 +82,97 @@ function Row({ label, value, pill }: { label: string; value: string; pill?: Reac
       <span style={{ fontFamily: FONT, fontSize: isMobile ? 11 : 12, fontWeight: 500, color: INK2, flex: 1, lineHeight: 1.4, minWidth: 0 }}>{value}</span>
       {pill}
     </div>
+  )
+}
+
+// ── Modal shell ───────────────────────────────────────────────
+function Modal({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) {
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose() }
+    window.addEventListener("keydown", onKey)
+    document.body.style.overflow = "hidden"
+    return () => {
+      window.removeEventListener("keydown", onKey)
+      document.body.style.overflow = ""
+    }
+  }, [open, onClose])
+  if (!open) return null
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 9999,
+        background: "rgba(0,0,0,0.6)",
+        display: "flex", alignItems: "flex-start", justifyContent: "center",
+        padding: "5vh 4vw", overflowY: "auto" as const,
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "#fff", borderRadius: 20, maxWidth: 920, width: "100%",
+          boxShadow: "0 30px 80px rgba(0,0,0,0.4)",
+          position: "relative" as const,
+          overflow: "hidden",
+        }}
+      >
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: "absolute" as const, top: 18, right: 18, zIndex: 2,
+            width: 34, height: 34, borderRadius: "50%",
+            background: "rgba(255,255,255,0.12)",
+            border: "1px solid rgba(255,255,255,0.25)",
+            color: "#fff", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 16, fontFamily: FONT, fontWeight: 700,
+          }}
+        >×</button>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+function ModalSection({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div style={{ marginBottom: 22 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+        <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+          {label}
+        </span>
+        <div style={{ flex: 1, height: 1, background: RULE }} />
+      </div>
+      <div style={{ fontFamily: FONT, fontSize: 13, color: INK2, lineHeight: 1.7 }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+// Decode HTML entities (the source data uses &apos; &amp; &#x27; etc.)
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&apos;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+}
+
+function CodeChip({ children }: { children: React.ReactNode }) {
+  return (
+    <span style={{
+      fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+      fontSize: 11, fontWeight: 500,
+      background: CHIP, color: INK,
+      border: `1px solid ${RULE}`,
+      padding: "3px 10px", borderRadius: 5,
+      display: "inline-block",
+    }}>{children}</span>
   )
 }
 
@@ -819,15 +912,23 @@ function FlowDiagram({ flow }: { flow: { kind: string; text: string }[] }) {
   )
 }
 
-function AutoRow({ a }: { a: Auto }) {
+function AutoRow({ a, onOpen }: { a: Auto; onOpen: (id: string) => void }) {
   const isMobile = useIsMobile()
   const dotColor = a.sev === "low" ? SEV_LOW : a.sev === "med" ? SEV_MED : SEV_HIGH
+  const hasDetail = !!PM_DETAILS[a.id]
   return (
-    <div style={{
-      display: "flex", alignItems: "flex-start", gap: 12,
-      padding: "10px 0",
-      borderBottom: `1px solid ${RULE}`,
-    }}>
+    <div
+      onClick={() => hasDetail && onOpen(a.id)}
+      style={{
+        display: "flex", alignItems: "flex-start", gap: 12,
+        padding: "10px 0",
+        borderBottom: `1px solid ${RULE}`,
+        cursor: hasDetail ? "pointer" : "default",
+        transition: "background 0.12s",
+      }}
+      onMouseEnter={e => { if (hasDetail) (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.02)" }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent" }}
+    >
       <span style={{
         fontFamily: FONT, fontWeight: 800, fontSize: 9.5, color: INK3,
         minWidth: 28, flexShrink: 0, paddingTop: 3, letterSpacing: 0.5,
@@ -868,13 +969,127 @@ function AutoRow({ a }: { a: Auto }) {
               fontStyle: "italic", letterSpacing: 0.1,
             }}>{t}</span>
           ))}
+          {hasDetail && (
+            <span style={{
+              fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 0.5,
+              padding: "2px 7px", borderRadius: 4,
+              color: INK3, marginLeft: "auto",
+            }}>
+              Click for detail →
+            </span>
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-function SubBlock({ s }: { s: Sub }) {
+// ── Automation row modal content ──────────────────────────────
+function AutoRowModalContent({ a }: { a: Auto }) {
+  const d = PM_DETAILS[a.id]
+  const sevLabel = a.sev === "low" ? "LOW" : a.sev === "med" ? "MEDIUM" : "HIGH"
+  const sevColor = a.sev === "low" ? SEV_LOW : a.sev === "med" ? SEV_MED : SEV_HIGH
+  return (
+    <div>
+      {/* Dark header */}
+      <div style={{ background: INK, padding: "30px 36px 24px", color: "#fff" }}>
+        <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 800, letterSpacing: 2, color: "rgba(255,255,255,0.5)", marginBottom: 8 }}>
+          AUTOMATION · #{a.id}
+        </div>
+        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 24, color: "#fff", letterSpacing: -0.5, lineHeight: 1.25, margin: "0 0 12px", paddingRight: 36 }}>
+          {decodeEntities(a.title)}
+        </h2>
+        <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
+          <span style={{
+            fontFamily: FONT, fontWeight: 800, fontSize: 9.5, letterSpacing: 1,
+            padding: "3px 9px", borderRadius: 99,
+            border: `1.5px solid ${sevColor}`, color: sevColor,
+            display: "inline-flex", alignItems: "center", gap: 5,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: sevColor }}/>
+            {sevLabel}
+          </span>
+          {a.phase && (
+            <span style={{
+              fontFamily: FONT, fontSize: 9.5, fontWeight: 800, letterSpacing: 1,
+              padding: "3px 9px", borderRadius: 99,
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              color: "rgba(255,255,255,0.85)",
+            }}>PHASE {a.phase.replace("P", "")}</span>
+          )}
+          {a.shipped && (
+            <span style={{
+              fontFamily: FONT, fontSize: 9.5, fontWeight: 800, letterSpacing: 1,
+              padding: "3px 9px", borderRadius: 99,
+              background: SEV_LIVE, color: INK,
+            }}>SHIPPED</span>
+          )}
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{ padding: "28px 36px 32px" }}>
+        {d?.diagram && (
+          <div
+            style={{ marginBottom: 22 }}
+            dangerouslySetInnerHTML={{ __html: d.diagram }}
+          />
+        )}
+        {d?.what && (
+          <ModalSection label="What it does">
+            <p style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: d.what }} />
+          </ModalSection>
+        )}
+        {d?.how && d.how.length > 0 && (
+          <ModalSection label="How it works">
+            <ol style={{ margin: 0, paddingLeft: 20 }}>
+              {d.how.map((h, i) => <li key={i} style={{ marginBottom: 6 }} dangerouslySetInnerHTML={{ __html: h }} />)}
+            </ol>
+          </ModalSection>
+        )}
+        {d?.modules && d.modules.length > 0 && (
+          <ModalSection label="Modules & services">
+            <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
+              {d.modules.map(m => <CodeChip key={m}>{decodeEntities(m)}</CodeChip>)}
+            </div>
+          </ModalSection>
+        )}
+        {d?.tables && d.tables.length > 0 && (
+          <ModalSection label="Tables / storage">
+            <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
+              {d.tables.map(t => <CodeChip key={t}>{decodeEntities(t)}</CodeChip>)}
+            </div>
+          </ModalSection>
+        )}
+        {d?.accept && d.accept.length > 0 && (
+          <ModalSection label="Acceptance criteria">
+            <ul style={{ margin: 0, paddingLeft: 20 }}>
+              {d.accept.map((a, i) => <li key={i} style={{ marginBottom: 4 }} dangerouslySetInnerHTML={{ __html: a }} />)}
+            </ul>
+          </ModalSection>
+        )}
+        {d?.notes && (
+          <ModalSection label="Notes">
+            <p style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: d.notes }} />
+          </ModalSection>
+        )}
+        {d?.longExplain && (
+          <ModalSection label="Detailed explanation">
+            <div className="long-explain" dangerouslySetInnerHTML={{ __html: d.longExplain }} />
+          </ModalSection>
+        )}
+        {!d && (
+          <p style={{ fontFamily: FONT, fontSize: 13, color: INK3, fontStyle: "italic", margin: 0 }}>
+            Detailed write-up for this automation is in progress.
+          </p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function SubBlock({ s, onOpenRow }: { s: Sub; onOpenRow: (id: string) => void }) {
   const isMobile = useIsMobile()
   return (
     <div style={{ ...CARD, padding: 0, overflow: "hidden", marginTop: 14 }}>
@@ -930,7 +1145,7 @@ function SubBlock({ s }: { s: Sub }) {
       <div style={{ padding: isMobile ? "12px 18px 18px" : "16px 24px 22px" }}>
         {s.rows.map((a, i) => (
           <div key={a.id} style={i === s.rows.length - 1 ? { marginBottom: -1 } : undefined}>
-            <AutoRow a={a} />
+            <AutoRow a={a} onOpen={onOpenRow} />
           </div>
         ))}
       </div>
@@ -940,6 +1155,9 @@ function SubBlock({ s }: { s: Sub }) {
 
 function DeepDiveSection() {
   const isMobile = useIsMobile()
+  const [openId, setOpenId] = useState<string | null>(null)
+  const allRows: Auto[] = SUBS.flatMap(s => s.rows)
+  const openRow = openId ? allRows.find(r => r.id === openId) : null
   const TOTAL_LOW = SUBS.reduce((s, x) => s + x.counts.low,  0)
   const TOTAL_MED = SUBS.reduce((s, x) => s + x.counts.med,  0)
   const TOTAL_HI  = SUBS.reduce((s, x) => s + x.counts.high, 0)
@@ -1029,7 +1247,11 @@ function DeepDiveSection() {
       </div>
 
       {/* 8 sub-blocks */}
-      {SUBS.map((s, i) => <SubBlock key={i} s={s} />)}
+      {SUBS.map((s, i) => <SubBlock key={i} s={s} onOpenRow={setOpenId} />)}
+
+      <Modal open={!!openRow} onClose={() => setOpenId(null)}>
+        {openRow && <AutoRowModalContent a={openRow} />}
+      </Modal>
     </div>
   )
 }
@@ -1038,7 +1260,7 @@ function DeepDiveSection() {
 // BUILD CALENDAR · 5 WEEKS
 // ════════════════════════════════════════════════════════════════
 type DayKind = "foundation" | "med" | "high" | "low" | "test"
-type Day = { day: string; kind: DayKind; title: string; desc: string; tags: string[] }
+type Day = { day: string; kind: DayKind; title: string; desc: string; tags: string[]; key?: string }
 type Week = { num: number; theme: string; days: Day[] }
 
 const DAY_ACCENT: Record<DayKind, string> = {
@@ -1107,15 +1329,23 @@ const WEEKS: Week[] = [
   },
 ]
 
-function DayCard({ d }: { d: Day }) {
+function DayCard({ d, dayKey, onOpen }: { d: Day; dayKey: string; onOpen: (k: string) => void }) {
   const isMobile = useIsMobile()
+  const hasDetail = !!BUILD_DAYS[dayKey]
   return (
-    <div style={{
-      ...CARD, padding: isMobile ? "16px 16px 18px" : "18px 18px 20px",
-      display: "flex", flexDirection: "column" as const, gap: 10,
-      borderLeft: `4px solid ${DAY_ACCENT[d.kind]}`,
-      minHeight: 0,
-    }}>
+    <div
+      onClick={() => hasDetail && onOpen(dayKey)}
+      style={{
+        ...CARD, padding: isMobile ? "16px 16px 18px" : "18px 18px 20px",
+        display: "flex", flexDirection: "column" as const, gap: 10,
+        borderLeft: `4px solid ${DAY_ACCENT[d.kind]}`,
+        minHeight: 0,
+        cursor: hasDetail ? "pointer" : "default",
+        transition: "transform 0.15s, box-shadow 0.15s",
+      }}
+      onMouseEnter={e => { if (hasDetail) { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 28px rgba(0,0,0,0.10)" } }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ""; (e.currentTarget as HTMLElement).style.boxShadow = SH }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 10, letterSpacing: 1.6, color: INK3 }}>{d.day}</span>
         <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 9, color: INK3 }}>9–4</span>
@@ -1129,12 +1359,130 @@ function DayCard({ d }: { d: Day }) {
       <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, marginTop: "auto" }}>
         {d.tags.map(t => <TagChip key={t} label={t} />)}
       </div>
+      {hasDetail && (
+        <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 0.5, color: INK3, marginTop: 2 }}>
+          Click for full plan →
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Day modal content ─────────────────────────────────────────
+function DayModalContent({ k }: { k: string }) {
+  const d = BUILD_DAYS[k]
+  if (!d) return null
+  return (
+    <div>
+      {/* Dark header */}
+      <div style={{ background: INK, padding: "30px 36px 28px", color: "#fff" }}>
+        <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 800, letterSpacing: 2, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
+          {d.eyebrow}
+        </div>
+        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 28, color: "#fff", letterSpacing: -1, lineHeight: 1.15, margin: "0 0 14px", paddingRight: 36 }}>
+          {decodeEntities(d.title)}
+        </h2>
+        <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
+          {d.chips.map((c, i) => {
+            const lvl = c.c === "lvl-low" ? SEV_LOW : c.c === "lvl-med" ? SEV_MED : c.c === "lvl-high" ? SEV_HIGH : null
+            return (
+              <span key={i} style={{
+                fontFamily: FONT, fontWeight: 800, fontSize: 9.5, letterSpacing: 1,
+                padding: "3px 10px", borderRadius: 99,
+                border: lvl ? `1.5px solid ${lvl}` : "1px solid rgba(255,255,255,0.2)",
+                color: lvl ?? "rgba(255,255,255,0.85)",
+                background: lvl ? "transparent" : "rgba(255,255,255,0.08)",
+                display: "inline-flex", alignItems: "center", gap: 5,
+              }}>
+                {lvl && <span style={{ width: 6, height: 6, borderRadius: "50%", background: lvl }}/>}
+                {c.l}
+              </span>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{ padding: "28px 36px 32px" }}>
+        {/* Workflow pipeline */}
+        <div style={{ background: INK, borderRadius: 14, padding: "18px 20px", marginBottom: 26 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap" as const, gap: 6 }}>
+            <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 800, letterSpacing: 1.5, color: "#fff" }}>◆ DAY WORKFLOW</span>
+            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, letterSpacing: 1.2, color: "rgba(255,255,255,0.45)" }}>INPUTS · PROCESS · DELIVER</span>
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, alignItems: "stretch" }}>
+            {d.workflow.map((step, i) => (
+              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 8, flex: "1 1 0", minWidth: 140 }}>
+                <span style={{
+                  display: "inline-flex", flexDirection: "column" as const,
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  borderRadius: 10, padding: "10px 12px",
+                  flex: 1,
+                }}>
+                  <span style={{
+                    fontFamily: FONT, fontSize: 8, fontWeight: 800,
+                    letterSpacing: 1.5, textTransform: "uppercase" as const,
+                    color: step.kind === "trigger" ? "#fff"
+                         : step.kind === "service" ? "#22D3EE"
+                         : step.kind === "storage" ? SEV_LIVE
+                         : step.kind === "ui"      ? "#FFB347"
+                         : "#FF1493",
+                    marginBottom: 4,
+                  }}>{step.kind}</span>
+                  <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: "#fff", lineHeight: 1.3 }}>
+                    {decodeEntities(step.name)}
+                  </span>
+                </span>
+                {i < d.workflow.length - 1 && <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 14, fontWeight: 700 }}>▸</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <ModalSection label="What this day delivers">
+          <p style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: d.what }} />
+        </ModalSection>
+
+        <ModalSection label="How it gets done · with time estimates">
+          <ol style={{ margin: 0, paddingLeft: 22 }}>
+            {d.how.map((h, i) => <li key={i} style={{ marginBottom: 8 }} dangerouslySetInnerHTML={{ __html: h }} />)}
+          </ol>
+        </ModalSection>
+
+        <ModalSection label="Modules & services">
+          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
+            {d.modules.map(m => <CodeChip key={m}>{decodeEntities(m)}</CodeChip>)}
+          </div>
+        </ModalSection>
+
+        <ModalSection label="Tables / storage">
+          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
+            {d.tables.map(t => <CodeChip key={t}>{decodeEntities(t)}</CodeChip>)}
+          </div>
+        </ModalSection>
+
+        <ModalSection label="Acceptance criteria">
+          <ul style={{ margin: 0, paddingLeft: 22 }}>
+            {d.accept.map((a, i) => <li key={i} style={{ marginBottom: 4 }} dangerouslySetInnerHTML={{ __html: a }} />)}
+          </ul>
+        </ModalSection>
+
+        <ModalSection label="Notes">
+          <p style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: d.notes }} />
+        </ModalSection>
+
+        <ModalSection label="Detailed explanation">
+          <div className="long-explain" dangerouslySetInnerHTML={{ __html: d.longExplain }} />
+        </ModalSection>
+      </div>
     </div>
   )
 }
 
 function BuildCalendar() {
   const isMobile = useIsMobile()
+  const [openKey, setOpenKey] = useState<string | null>(null)
   return (
     <div style={{ ...CARD, padding: isMobile ? "22px 18px" : "32px 36px" }}>
       {/* Header */}
@@ -1190,11 +1538,18 @@ function BuildCalendar() {
               gridTemplateColumns: isMobile ? "1fr" : "repeat(5, 1fr)",
               gap: 10,
             }}>
-              {w.days.map(d => <DayCard key={d.day} d={d} />)}
+              {w.days.map(d => {
+                const k = `w${w.num}-${d.day.toLowerCase()}`
+                return <DayCard key={d.day} d={d} dayKey={k} onOpen={setOpenKey} />
+              })}
             </div>
           </div>
         ))}
       </div>
+
+      <Modal open={!!openKey} onClose={() => setOpenKey(null)}>
+        {openKey && <DayModalContent k={openKey} />}
+      </Modal>
     </div>
   )
 }
@@ -1321,6 +1676,56 @@ function EmailThreadCard() {
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "0 0 22px", lineHeight: 1.6 }}>
           Andre's two most recent emails (May 6, 6:34 AM and 7:07 AM) are what I want to walk through with the coach — credentials strategy, and his masterdash deployment plan with role search paths and the pgvector watch-item.
         </p>
+
+        {/* Resources from coach */}
+        <div style={{ background: CHIP, borderRadius: 12, padding: "14px 16px", marginBottom: 22 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <span style={{
+              fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1,
+              padding: "2px 8px", borderRadius: 99,
+              background: "#FF1493", color: "#fff", textTransform: "uppercase" as const,
+            }}>From coach</span>
+            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+              Resources to read
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+            {[
+              { title: "Self-host Supabase · Enable MCP", desc: "Reading now — relevant to wiring Claude/Cursor straight into the self-hosted Supabase instance.", url: "https://supabase.com/docs/guides/self-hosting/enable-mcp", tag: "Read now" },
+              { title: "Self-host Supabase · Edge Functions", desc: "Next step — running serverless functions inside the self-hosted stack.", url: "https://supabase.com/docs/guides/self-hosting/self-hosted-functions", tag: "Next step" },
+            ].map(r => (
+              <a key={r.url} href={r.url} target="_blank" rel="noopener noreferrer" style={{
+                display: "flex", alignItems: "center", gap: 12,
+                padding: "10px 12px", borderRadius: 10,
+                background: "#fff", border: `1px solid ${RULE}`,
+                textDecoration: "none",
+              }}>
+                <div style={{
+                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+                  background: "#3ECF8E", color: "#fff",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontFamily: FONT, fontWeight: 900, fontSize: 14,
+                }}>S</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: INK, marginBottom: 2 }}>
+                    {r.title}
+                  </div>
+                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: INK3, lineHeight: 1.4 }}>
+                    {r.desc}
+                  </div>
+                </div>
+                <span style={{
+                  fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 0.5,
+                  padding: "2px 8px", borderRadius: 99,
+                  background: r.tag === "Read now" ? INK : CHIP,
+                  color: r.tag === "Read now" ? "#fff" : INK3,
+                  border: r.tag === "Read now" ? `1px solid ${INK}` : `1px solid ${RULE}`,
+                  textTransform: "uppercase" as const, flexShrink: 0,
+                }}>{r.tag}</span>
+              </a>
+            ))}
+          </div>
+        </div>
 
         {/* Thread */}
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 0 }}>
