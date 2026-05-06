@@ -217,16 +217,16 @@ const html = `<!DOCTYPE html>
       <div class="left">
         <div class="badges">
           <span class="badge-dark"><span class="slash">///</span> Accelerator</span>
-          <span class="badge-chip">April 20, 2026</span>
-          <span class="badge-chip">Session 6</span>
+          <span class="badge-chip">May 6, 2026</span>
+          <span class="badge-chip">Build Day · Week 1</span>
         </div>
         <div>
-          <p class="eyebrow">Thanks for all of your help</p>
+          <p class="eyebrow">From zero to Mike's AIOS in 5 weeks</p>
           <h1 class="headline">Hi Valera!</h1>
         </div>
         <div>
           <p class="project-label">Project</p>
-          <p class="project-name">Ticket Help Desk — Little Tree &amp; Le Roi</p>
+          <p class="project-name">LTV Hub — Mike's AIOS</p>
         </div>
       </div>
 
@@ -234,22 +234,22 @@ const html = `<!DOCTYPE html>
       <div class="status-card">
         <div>
           <div class="status-label">Current</div>
-          <div class="status-session">Session 6</div>
-          <div class="status-date">April 20, 2026</div>
+          <div class="status-session">Build Day 1</div>
+          <div class="status-date">May 6, 2026 · 9–4</div>
         </div>
         <div class="divider"></div>
         <div>
           <div class="ms-row">
             <span class="status-label" style="margin:0">Milestones</span>
-            <span class="ms-count">7 / 12</span>
+            <span class="ms-count">5 / 12</span>
           </div>
-          <div class="progress-track"><div class="progress-fill"></div></div>
-          <div class="progress-pct">58% complete</div>
+          <div class="progress-track"><div class="progress-fill" style="width:42%"></div></div>
+          <div class="progress-pct">42% · Week 1 of 5</div>
         </div>
         <div class="divider"></div>
         <div>
           <div class="next-label">Up next</div>
-          <div class="next-text">Supabase CLI + Schema setup</div>
+          <div class="next-text">Schema design with Claude — service by service</div>
         </div>
       </div>
 
