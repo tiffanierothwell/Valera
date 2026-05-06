@@ -1153,7 +1153,8 @@ function SubBlock({ s, onOpenRow }: { s: Sub; onOpenRow: (id: string) => void })
   )
 }
 
-function DeepDiveSection() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _DeepDiveSection() {
   const isMobile = useIsMobile()
   const [openId, setOpenId] = useState<string | null>(null)
   const allRows: Auto[] = SUBS.flatMap(s => s.rows)
@@ -1920,8 +1921,7 @@ export default function App() {
         <StackSection />
 
 
-        {/* ════════════════════════════════════════ DEEP DIVE ════════════════════════════════════════ */}
-        <DeepDiveSection />
+        {/* DEEP DIVE — removed per request */}
 
 
         {/* ════════════════════════════════════════ BUILD CALENDAR ════════════════════════════════════════ */}
@@ -2077,3 +2077,7 @@ export default function App() {
     </div>
   )
 }
+
+
+// kept for reference, not currently rendered
+export { _DeepDiveSection }
